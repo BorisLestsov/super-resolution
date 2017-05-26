@@ -77,7 +77,9 @@ class VGGLoss(nn.Module):
     
 
 def huber_loss(x, y, eps):
-    return torch.sqrt((x-y)**2+eps) - torch.sqrt(eps)
+    _eps = torch.Tensor(x.size()).cuda()
+    _eps = Variable(_eps.fill_(eps))
+    return torch.sum(torch.sqrt((x-y)**2 + _eps) - torch.sqrt(_eps))
 
 
 
@@ -86,6 +88,9 @@ def main():
     torch.cuda.set_device(1)
     a = VGGLoss()
     optimizer = optim.SGD(a.model.parameters(), lr=0.01)
+
+    alpha = 0.5
+    beta = 0.5
 
     for i in range(10):
         a.model.parameters
@@ -102,8 +107,7 @@ def main():
         im2 = Variable(torch.Tensor(im2).unsqueeze(0).cuda(), requires_grad=False)
         
         optimizer.zero_grad()
-        vgg_loss = 
-        loss = alpha*a.forward(im1, im2) + beta*huber()
+        loss = alpha*a.forward(im1, im2) + beta*huber_loss(im1, im1, 1)    # Huber loss should be between LR and HR image
         print(loss)
         loss.backward()
         optimizer.step()
