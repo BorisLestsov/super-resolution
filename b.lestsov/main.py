@@ -22,10 +22,6 @@ class Vgg16(torch.nn.Module):
         self.conv4_2 = nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1)
         self.conv4_3 = nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1)
 
-        self.conv5_1 = nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1)
-        self.conv5_2 = nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1)
-        self.conv5_3 = nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1)
-
     def forward(self, X):
         h = F.relu(self.conv1_1(X))
         h = F.relu(self.conv1_2(h))
